@@ -22,7 +22,7 @@ const FormContainer = styled.div`
   background: #e9eaec;
   height: 100vh;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   flex-direction: column; 
   
@@ -34,9 +34,9 @@ const FormContainer = styled.div`
   // padding: 3rem;
   // border-radius: 25px;
 
-    @media (max-width: 768px) {
-  justify-content: space-between;
-  }
+  // @media (max-width: 768px) {
+  // justify-content: space-between;
+  // }
   
 `;
 
@@ -79,10 +79,14 @@ const Button = styled.button`
 
 const ProgressBarContainer = styled.div`
   // position: absolute;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   // right: 1rem;
-  display: flex;
+  display: flex; 
   align-items: center;
+
+  @media (max-width: 768px) {
+  margin-bottom: 2rem;
+  }
 `;
 
 const ProgressBar = styled.div`
