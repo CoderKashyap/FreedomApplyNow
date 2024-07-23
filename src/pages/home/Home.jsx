@@ -24,7 +24,7 @@ const FormContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  flex-direction: column; 
   
   // box-sizing: border-box;
   // position: relative;
@@ -33,6 +33,11 @@ const FormContainer = styled.div`
   // height: 100vh;
   // padding: 3rem;
   // border-radius: 25px;
+
+    @media (max-width: 768px) {
+  justify-content: space-between;
+  }
+  
 `;
 
 const QuestionContainer = styled(motion.div)`  
@@ -74,7 +79,7 @@ const Button = styled.button`
 
 const ProgressBarContainer = styled.div`
   // position: absolute;
-  bottom: 0px;
+  margin-bottom: 2rem;
   // right: 1rem;
   display: flex;
   align-items: center;
@@ -266,7 +271,7 @@ const FluentForm = () => {
 
   const handleSubmit = () => {
     console.log("Form submitted with answers:", answers);
-    alert("Form successfully submitted"); 
+    alert("Form successfully submitted");
   };
 
   const progressWidth = (Object.keys(answers).length / questionsToDisplay().length) * 100;
