@@ -61,7 +61,16 @@ const Input = styled.input`
   border-radius: 20px;
   border: 1px solid #ddd;
   box-sizing: border-box;
-  
+`;
+
+const InputDollar = styled.input`
+  padding: 1rem;
+  padding-left: 1.6rem;
+  margin-top: 1rem;
+  width: 100%;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
 `;
 
 const Button = styled.button`
@@ -169,12 +178,44 @@ const MultipleChoiceButton = styled.button`
   } 
 `;
 
+const ErrorMessage = styled.div`
+  color: red;
+  margin-top: 0.5rem;
+  margin-left: 1rem;
+  font-size: 15px;
+`;
+
 
 // Question Component
-const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple }) => {
+const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple, isSelectOption, isTextArea }) => {
   const handleOptionClick = (option) => {
     onChange(option);
     onSubmit();
+  };
+
+  const [errors, setErrors] = useState({});
+
+
+  // Validation functions
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const validatePhone = (phone) => {
+    const regex = /^[0-9]{10}$/;
+    return regex.test(phone);
+  };
+
+  const validateEmailPhone = (field, inputValue) => {
+    // onChange({ ...value, [field]: inputValue });
+    if (field === "email" && !validateEmail(inputValue)) {
+      setErrors((prevErrors) => ({ ...prevErrors, email: "Invalid email format" }));
+    } else if (field === "phone" && !validatePhone(inputValue)) {
+      setErrors((prevErrors) => ({ ...prevErrors, phone: "Invalid phone number format" }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, [field]: "" }));
+    }
   };
 
   return (<>
@@ -197,11 +238,11 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
               {option}
             </MultipleChoiceButton>
           ))
-        ) : isMultiple && id=="addressProvince" ? (
+        ) : isMultiple && id == "addressProvince" ? (
           <div className="w-full">
-            <Textarea
+            <Input
               value={value.address || ""}
-              placeholder="Enter your address"
+              placeholder="Enter your address(Autofetch)"
               onChange={(e) => onChange({ ...value, address: e.target.value })}
             />
             <Select
@@ -217,35 +258,68 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
               <Button onClick={onSubmit}>OK</Button>
             )}
           </div>
-        ) : isMultiple && id == "nameEmailPhone" ? ( <div> <Input
-          type="text"
-          value={value.name || ""}
-          placeholder="Enter your name"
-          onChange={(e) => onChange({ ...value, name: e.target.value })}
-        />
-
-        <Input
-          type="email"
-          value={value.email || ""}
-          placeholder="Enter your email"
-          onChange={(e) => onChange({ ...value, email: e.target.value })}
-        />
-
-        <Input
-          type="tel"
-          value={value.phone || ""}
-          placeholder="Enter your phone number"
-          onChange={(e) => onChange({ ...value, phone: e.target.value })}
-        /> 
-         {value.name && value.email && value.phone && (
+        ) : isSelectOption && id == "hearAboutUs" ? (
+          <div className="w-full">
+            <Select
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+            >
+              <option value="">How did you hear about us?</option>
+              <option value="Google Search">Google Search</option>
+              <option value="Social Media">Social Media</option>
+              <option value="TV">TV</option>
+            </Select>
+            {value && (
               <Button onClick={onSubmit}>OK</Button>
             )}
-        </div>) : (
+          </div>
+        ) : isMultiple && id == "nameEmailPhone" ? (<div>
+          <Input
+            type="text"
+            value={value.name || ""}
+            placeholder="Enter your name"
+            onChange={(e) => onChange({ ...value, name: e.target.value })} />
+
+          <Input
+            type="email"
+            value={value.email || ""}
+            placeholder="Enter your email"
+            onChange={(e) => { onChange({ ...value, email: e.target.value }); validateEmailPhone("email", e.target.value) }}
+          />
+          {errors.email && value.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+          <Input
+            type="phone"
+            value={value.phone || ""}
+            placeholder="Enter your phone number"
+            maxLength={10}
+            onChange={(e) => { onChange({ ...value, phone: e.target.value.replace(/[^0-9]/g, "") }); validateEmailPhone("phone", e.target.value) }}
+          />
+          {errors.phone && value.phone && <ErrorMessage>{errors.phone}</ErrorMessage>}
+          {value.name && value.email && value.phone && (
+            <Button onClick={onSubmit}>OK</Button>
+          )}
+        </div>) : isTextArea && id == "shareOtherDetail" ? (
+
           <div className="w-full">
-            <Input
+            <Textarea
               value={value}
               placeholder={`Enter ${question}`}
               onChange={(e) => onChange(e.target.value)}
+            />
+            {value && (
+              <Button onClick={onSubmit}>OK</Button>
+            )}
+          </div>
+
+        ) : (
+          <div className="w-full relative inline-block">
+
+            {value && <span className="md:text-xl text-lg absolute left-[15px] top-[31px]">$</span>}
+
+            <InputDollar
+              value={value}
+              placeholder={`Enter ${question}`}
+              onChange={(e) => onChange(e.target.value.replace(/[^0-9]/g, ""))}
             />
             {value && (
               <Button onClick={onSubmit}>OK</Button>
@@ -270,9 +344,12 @@ const FluentForm = () => {
 
     { id: "loanPurpose", type: "multipleChoice", question: "What is the purpose of the loan?", options: ["Residential", "Land", "Construction", "Commercial"] },
     { id: "lookingFor", type: "multipleChoice", question: "What are you looking for?", options: ["1st Mortgage", "2nd Mortgage", "3rd Mortgage"] },
-    { id: "hearAboutUs", type: "multipleChoice", question: "How did you hear about us?", options: ["Radio", "Google Search", "Social Media", "Podcast", "Online Magazine", "TV", "Paper Ad", "Referral", "Mail Postcard", "Other"] },
+
+    { id: "hearAboutUs", type: "selectOptionInput", question: "How did you hear about us?", selection: ["Radio", "Google Search", "Social Media", "Podcast", "Online Magazine", "TV", "Paper Ad", "Referral", "Mail Postcard", "Other"] },
+
     { id: "traditionalLenders", type: "multipleChoice", question: "Have you applied with traditional lenders?", options: ["Yes", "No"] },
     { id: "timeframe", type: "multipleChoice", question: "What's your estimated timeframe?", options: ["Within 30 days", "Within 3 Months", "Within 8 Months", "Within 12 Months", "Unsure"] },
+    { id: "shareOtherDetail", type: "textAreaInput", question: "Please add any other details you want to share." },
     { id: "valueOfProperty", type: "input", question: "Value of Property (Approximate)" },
     { id: "totalMortgage", type: "input", question: "Total Mortgages (Approximate)" },
     { id: "purchasePrice", type: "input", question: "Purchase price" },
@@ -284,7 +361,7 @@ const FluentForm = () => {
 
   // Determine which questions to display
   const questionsToDisplay = () => {
-    const baseQuestions = questions.slice(0, 6);
+    const baseQuestions = questions.slice(0, 9);
     const conditionalQuestions = [];
 
     if (answers.financing === "Refinance") {
@@ -347,7 +424,6 @@ const FluentForm = () => {
   const progressWidth = (Object.keys(answers).length / questionsToDisplay().length) * 100;
 
 
-
   return (<>
 
     <FormContainer>
@@ -370,6 +446,8 @@ const FluentForm = () => {
                 onChange={handleChange}
                 onSubmit={handleNextQuestion}
                 isMultiple={questions[currentQuestion].type === "multipleInputs"}
+                isSelectOption={questions[currentQuestion].type === "selectOptionInput"}
+                isTextArea={questions[currentQuestion].type === "textAreaInput"}
                 options={questionsToDisplay()[currentQuestion].options}
               />
             )}
