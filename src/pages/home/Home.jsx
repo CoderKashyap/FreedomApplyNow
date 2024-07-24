@@ -22,7 +22,7 @@ const FormContainer = styled.div`
   background: #e9eaec;
   height: 100vh;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-direction: column; 
   
@@ -78,15 +78,12 @@ const Button = styled.button`
 `;
 
 const ProgressBarContainer = styled.div`
-  // position: absolute;
   margin-bottom: 1rem;
-  // right: 1rem;
   display: flex; 
   align-items: center;
 
-  @media (max-width: 768px) {
-  margin-bottom: 2rem;
-  }
+  // position: absolute;
+  // right: 1rem;
 `;
 
 const ProgressBar = styled.div`
@@ -120,6 +117,24 @@ const ArrowButton = styled.button`
   padding: 5px;
 `;
 
+const Textarea = styled.textarea`
+  padding: 1rem;
+  margin-top: 1rem;
+  width: 100%;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+`;
+
+const Select = styled.select`
+  padding: 1rem;
+  margin-top: 1rem;
+  width: 100%;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+`;
+
 
 
 const MultipleChoiceButton = styled.button`
@@ -151,13 +166,12 @@ const MultipleChoiceButton = styled.button`
   
   @media (max-width: 768px) {
     padding: 0.4rem 0.8rem;
-  }
-
+  } 
 `;
 
 
 // Question Component
-const Question = ({ question, value, onChange, onSubmit, options }) => {
+const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple }) => {
   const handleOptionClick = (option) => {
     onChange(option);
     onSubmit();
@@ -183,14 +197,63 @@ const Question = ({ question, value, onChange, onSubmit, options }) => {
               {option}
             </MultipleChoiceButton>
           ))
-        ) : (
+        ) : isMultiple && id=="addressProvince" ? (
           <div className="w-full">
-            <Input value={value} placeholder={`Enter ` + question} onChange={(e) => onChange(e.target.value)} />
+            <Textarea
+              value={value.address || ""}
+              placeholder="Enter your address"
+              onChange={(e) => onChange({ ...value, address: e.target.value })}
+            />
+            <Select
+              value={value.province || ""}
+              onChange={(e) => onChange({ ...value, province: e.target.value })}
+            >
+              <option value="">Select your province</option>
+              <option value="province1">Province 1</option>
+              <option value="province2">Province 2</option>
+              <option value="province3">Province 3</option>
+            </Select>
+            {value.address && value.province && (
+              <Button onClick={onSubmit}>OK</Button>
+            )}
+          </div>
+        ) : isMultiple && id == "nameEmailPhone" ? ( <div> <Input
+          type="text"
+          value={value.name || ""}
+          placeholder="Enter your name"
+          onChange={(e) => onChange({ ...value, name: e.target.value })}
+        />
+
+        <Input
+          type="email"
+          value={value.email || ""}
+          placeholder="Enter your email"
+          onChange={(e) => onChange({ ...value, email: e.target.value })}
+        />
+
+        <Input
+          type="tel"
+          value={value.phone || ""}
+          placeholder="Enter your phone number"
+          onChange={(e) => onChange({ ...value, phone: e.target.value })}
+        /> 
+         {value.name && value.email && value.phone && (
+              <Button onClick={onSubmit}>OK</Button>
+            )}
+        </div>) : (
+          <div className="w-full">
+            <Input
+              value={value}
+              placeholder={`Enter ${question}`}
+              onChange={(e) => onChange(e.target.value)}
+            />
             {value && (
               <Button onClick={onSubmit}>OK</Button>
             )}
           </div>
         )}
+
+
       </div>
 
     </QuestionContainer>
@@ -201,6 +264,10 @@ const Question = ({ question, value, onChange, onSubmit, options }) => {
 const FluentForm = () => {
   const questions = [
     { id: "financing", type: "multipleChoice", question: "What do you need financing for?", options: ["Refinance", "New Purchase"] },
+
+    { id: "addressProvince", type: "multipleInputs", question: "Please provide your address and province." },
+    { id: "nameEmailPhone", type: "multipleInputs", question: "Please provide your name, email, and phone number." },
+
     { id: "loanPurpose", type: "multipleChoice", question: "What is the purpose of the loan?", options: ["Residential", "Land", "Construction", "Commercial"] },
     { id: "lookingFor", type: "multipleChoice", question: "What are you looking for?", options: ["1st Mortgage", "2nd Mortgage", "3rd Mortgage"] },
     { id: "hearAboutUs", type: "multipleChoice", question: "How did you hear about us?", options: ["Radio", "Google Search", "Social Media", "Podcast", "Online Magazine", "TV", "Paper Ad", "Referral", "Mail Postcard", "Other"] },
@@ -214,7 +281,6 @@ const FluentForm = () => {
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
-  // const [showingConditionalQuestions, setShowingConditionalQuestions] = useState(false);
 
   // Determine which questions to display
   const questionsToDisplay = () => {
@@ -298,10 +364,12 @@ const FluentForm = () => {
             {currentQuestion < questionsToDisplay().length && (
               <Question
                 key={questionsToDisplay()[currentQuestion].id}
+                id={questionsToDisplay()[currentQuestion].id}
                 question={questionsToDisplay()[currentQuestion].question}
                 value={answers[questionsToDisplay()[currentQuestion].id] || ""}
                 onChange={handleChange}
                 onSubmit={handleNextQuestion}
+                isMultiple={questions[currentQuestion].type === "multipleInputs"}
                 options={questionsToDisplay()[currentQuestion].options}
               />
             )}
@@ -333,3 +401,7 @@ const App = () => (
 );
 
 export default App;
+
+
+
+
