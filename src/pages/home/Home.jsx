@@ -5,6 +5,8 @@ import SubHeader from "../../components/layout/SubHeader";
 import "./home.css"
 import NewPurchase from "/newPurchase.svg";
 import Refinance from "/refinance.svg";
+import rightArrowSvg from "/polygonRight.svg";
+import leftArrowSvg from "/polygonLeft.svg";
 
 // Global styles
 const GlobalStyle = createGlobalStyle`
@@ -22,8 +24,7 @@ const GlobalStyle = createGlobalStyle`
 
 // Styled components
 const FormContainer = styled.div`
-  // background: #e9eaec;
-  // height: 100vh;
+  height: calc(100vh - 7.4rem);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -40,7 +41,6 @@ const FormContainer = styled.div`
   // @media (max-width: 768px) {
   // justify-content: space-between;
   // }
-  
 `;
 
 const QuestionContainer = styled(motion.div)`  
@@ -302,9 +302,12 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
     >
+
+      { options && id == "financing" ? <SubHeader /> : "" }
+
       <div className="md:mb-4 mb-2 text-2xl fo font-bold text-white border p-2 rounded-lg questionStyle text-center"> {question} </div>
 
-      <div className="flex flex-wrap gap-10 font-medium">
+      <div className={`flex flex-wrap ${ options && id == "financing" ? "gap-10" : "gap-7" }  font-medium`}>
         {options && id !== "financing" ? (
           options.map((option) => (
             <MultipleChoiceButton
@@ -431,7 +434,7 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
               <CheckboxLabel>I agree to the storage and processing of my personal data according to this website's privacy policy.</CheckboxLabel>
             </CheckboxContainer>
             {value.additionalDetails && value.consent && (<>
-              <Button onClick={handlePreviousQuestion}>Previous</Button>
+              <Button onClick={handlePreviousQuestion}>Previous</Button> <span className="mr-8"></span>
               <Button onClick={onSubmit}>Submit</Button></>
             )}
           </div>
@@ -557,7 +560,7 @@ const FluentForm = () => {
       <div className="font-sans">
 
         {/* <div className="md:m-10 m-2 rounded-lg border-2 bg-white md:p-14 p-4 py-5 max-w-[50rem]"> */}
-        <div className="md:m-5 m-2 rounded-lg p-4 py-5 max-w-[45rem]">
+        <div className="md:m-1 m-2 rounded-lg p-4 py-5 max-w-[45rem]">
 
           <AnimatePresence mode="wait">
             {currentQuestion < questionsToDisplay().length && (
@@ -585,8 +588,9 @@ const FluentForm = () => {
         <ProgressBar>
           <Progress width={progressWidth} />
         </ProgressBar>
-        <ArrowButton onClick={handlePreviousQuestion}> <i className='bx bx-chevron-left'></i> </ArrowButton>
-        <ArrowButton onClick={handleNextQuestion} disabled={!answers[questionsToDisplay()[currentQuestion].id]} > <i className='bx bx-chevron-right'></i> </ArrowButton>
+        {/* <ArrowButton onClick={handlePreviousQuestion}> <i className='bx bx-chevron-left'></i> </ArrowButton> */}
+        <ArrowButton onClick={handlePreviousQuestion}> <img src={leftArrowSvg} alt="leftArrowSvg" /> </ArrowButton>
+        <ArrowButton onClick={handleNextQuestion} disabled={!answers[questionsToDisplay()[currentQuestion].id]} > <img src={rightArrowSvg} alt="rightArrowSvg" /> </ArrowButton>
       </ProgressBarContainer>
 
     </FormContainer>
@@ -599,7 +603,8 @@ const Home = () => (
     <GlobalStyle />
 
     <section className="bg-black">
-      <SubHeader />
+
+      {/* <SubHeader /> */}
 
       <FluentForm />
     </section>
