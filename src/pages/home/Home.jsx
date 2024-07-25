@@ -195,7 +195,7 @@ const CheckboxLabel = styled.label`
 `;
 
 // Question Component
-const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple, isSelectOption, isTextArea }) => {
+const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple, isSelectOption, isTextArea, handlePreviousQuestion }) => {
   const handleOptionClick = (option) => {
     onChange(option);
     onSubmit();
@@ -225,6 +225,8 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
       setErrors((prevErrors) => ({ ...prevErrors, [field]: "" }));
     }
   };
+
+
 
   return (<>
     <QuestionContainer
@@ -325,23 +327,12 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
               </div>
               <CheckboxLabel>I agree to the storage and processing of my personal data according to this website's privacy policy.</CheckboxLabel>
             </CheckboxContainer>
-            {value.additionalDetails && value.consent && (
-              <Button onClick={onSubmit}>OK</Button>
+            {value.additionalDetails && value.consent && (<>
+              <Button onClick={handlePreviousQuestion}>Previous</Button>
+              <Button onClick={onSubmit}>Submit</Button></>
             )}
           </div>
 
-          // <div className="w-full">
-          //   <Textarea
-          //     value={value}
-          //     placeholder={`Enter ${question}`}
-          //     onChange={(e) => onChange(e.target.value)}
-          //   />
-
-
-          //   {value && (
-          //     <Button onClick={onSubmit}>OK</Button>
-          //   )}
-          // </div>
 
         ) : (
           <div className="w-full relative inline-block">
@@ -478,6 +469,7 @@ const FluentForm = () => {
                 value={answers[questionsToDisplay()[currentQuestion].id] || ""}
                 onChange={handleChange}
                 onSubmit={handleNextQuestion}
+                handlePreviousQuestion={handlePreviousQuestion}
                 isMultiple={questions[currentQuestion].type === "multipleInputs"}
                 isSelectOption={questions[currentQuestion].type === "selectOptionInput"}
                 isTextArea={questionsToDisplay()[currentQuestion].type === "textAreaInput"}
