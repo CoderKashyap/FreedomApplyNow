@@ -185,6 +185,14 @@ const ErrorMessage = styled.div`
   font-size: 15px;
 `;
 
+const CheckboxContainer = styled.div`
+  display: flex;
+  margin-top: .2rem;
+`;
+
+const CheckboxLabel = styled.label`
+  margin-left: 0.5rem;
+`;
 
 // Question Component
 const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple, isSelectOption, isTextArea }) => {
@@ -302,14 +310,38 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
 
           <div className="w-full">
             <Textarea
-              value={value}
-              placeholder={`Enter ${question}`}
-              onChange={(e) => onChange(e.target.value)}
+              value={value.additionalDetails || ""}
+              placeholder="Enter details"
+              onChange={(e) => onChange({ ...value, additionalDetails: e.target.value })}
             />
-            {value && (
+            <div className="mt-4">Consent*</div>
+            <CheckboxContainer>
+              <div>
+                <input
+                  type="checkbox"
+                  checked={value.consent || false}
+                  onChange={(e) => onChange({ ...value, consent: e.target.checked })}
+                />
+              </div>
+              <CheckboxLabel>I agree to the storage and processing of my personal data according to this website's privacy policy.</CheckboxLabel>
+            </CheckboxContainer>
+            {value.additionalDetails && value.consent && (
               <Button onClick={onSubmit}>OK</Button>
             )}
           </div>
+
+          // <div className="w-full">
+          //   <Textarea
+          //     value={value}
+          //     placeholder={`Enter ${question}`}
+          //     onChange={(e) => onChange(e.target.value)}
+          //   />
+
+
+          //   {value && (
+          //     <Button onClick={onSubmit}>OK</Button>
+          //   )}
+          // </div>
 
         ) : (
           <div className="w-full relative inline-block">
