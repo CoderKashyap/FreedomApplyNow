@@ -3,13 +3,15 @@ import styled, { createGlobalStyle } from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import SubHeader from "../../components/layout/SubHeader";
 import "./home.css"
+import NewPurchase from "/newPurchase.svg";
+import Refinance from "/refinance.svg";
 
 // Global styles
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
-    font-family: Montserrat;
+    font-family: Sora;
     // display: flex;
     // justify-content: center;
     // align-items: center;
@@ -45,7 +47,7 @@ const QuestionContainer = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
   flex-wrap: wrap;
   // flex-direction: column; 
   // margin: 10px;
@@ -149,22 +151,22 @@ const Select = styled.select`
 
 
 const MultipleChoiceButton = styled.button`
- margin-top: .3rem;
+  margin-top: .3rem;
   padding: 1rem 2rem;
-  background-color: ${({ selected }) => (selected ? "#ff7e12" : "#fff")};
-  color: ${({ selected }) => (selected ? "#fff" : "#000")};
+  background: ${({ selected }) => (selected ? "linear-gradient(to right, #FC9700, #FFF739)" : "white")};
+  color: #000;
   border: 1px solid ${({ selected }) => (selected ? "#ff7e12" : "#A0A0A0")};  
   border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 
-  &:hover {
-    background-color: ${({ selected }) => (selected ? "#FFF5EE" : "#FFF5EE")}; /* Light gray background on hover */
-  }
+    &:hover {
+      background: linear-gradient(to right, #FC9700, #FFF739);
+    }
 
-  &:active {
-    background-color: #ff7e12; /* Slightly darker gray on click */
-  }
+    &:active {
+      background: linear-gradient(to right, #FC9700, #FFF739);
+    }
 
   /* Responsive padding */
   @media (max-width: 1200px) {
@@ -178,6 +180,67 @@ const MultipleChoiceButton = styled.button`
   @media (max-width: 768px) {
     padding: 0.4rem 0.8rem;
   } 
+`;
+
+const MultipleChoiceDesignButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-direction: column;
+  margin-top: 1.5rem;
+  padding: 2rem;
+  height: 220px;
+  min-width: 260px;
+  background-color: #F7F7F7;
+  color: ${({ selected }) => (selected ? "#000" : "#000")};
+  border: 3px solid ${({ selected }) => (selected ? "#2196F3" : "#F7F7F7")};  
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+
+  /* Responsive padding */
+  @media (max-width: 1200px) {
+    padding: 0.8rem 1.6rem;
+  }
+  
+  @media (max-width: 992px) {
+    padding: 0.6rem 1.2rem;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 0.4rem 0.8rem;
+  } 
+
+
+
+  span {
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background: ${({ selected }) => (selected ? "linear-gradient(to right, #FC9700, #FFF739)" : "white")}; 
+
+    &:hover {
+      background: linear-gradient(to right, #FC9700, #FFF739);
+    }
+
+    &:active {
+      background: linear-gradient(to right, #FC9700, #FFF739);
+    }
+
+  }
+
+
+`;
+
+const designButtonTitle = styled.span`
+  color: red;
+  margin-top: 0.5rem;
+  margin-left: 1rem;
+  font-size: 15px;
 `;
 
 const ErrorMessage = styled.div`
@@ -241,8 +304,8 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
     >
       <div className="md:mb-4 mb-2 text-2xl fo font-bold text-white border p-2 rounded-lg questionStyle text-center"> {question} </div>
 
-      <div className="flex flex-wrap gap-2 font-medium">
-        {options ? (
+      <div className="flex flex-wrap gap-10 font-medium">
+        {options && id !== "financing" ? (
           options.map((option) => (
             <MultipleChoiceButton
               key={option}
@@ -252,6 +315,42 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
               {option}
             </MultipleChoiceButton>
           ))
+        ) : options && id == "financing" ? (
+          // options.map((option) => (
+          //   <MultipleChoiceDesignButton
+          //     key={option}
+          //     selected={value === option}
+          //     onClick={() => handleOptionClick(option)}
+          //   >
+          //     <div className="rounded-full bg-white py-6 px-7"> <img src={NewPurchase} alt="newPurchase icon" /> </div>
+
+          //     {option}
+          //   </MultipleChoiceDesignButton>
+          // ))
+
+          <>
+
+            <MultipleChoiceDesignButton
+              selected={value === "Refinance"}
+              onClick={() => handleOptionClick("Refinance")}
+            >
+              <div className="rounded-full bg-white py-6 px-7"> <img src={Refinance} alt="icon" /> </div>
+
+              <span className=""> Refinance</span>
+              {/* <span className="hover:bg-white rounded-full py-3 px-6 hover:bg-gradient-to-r from-[#FC9700] to-[#FFF739] font-bold text-base"> Refinance</span> */}
+            </MultipleChoiceDesignButton>
+            <MultipleChoiceDesignButton
+              selected={value === "New Purchase"}
+              onClick={() => handleOptionClick("New Purchase")}
+            >
+              <div className="rounded-full bg-white py-6 px-7"> <img src={NewPurchase} alt="icon" /> </div>
+
+              <span className=""> New Purchase </span>
+              {/* <span className="hover:bg-white rounded-full py-3 px-6 hover:bg-gradient-to-r from-[#FC9700] to-[#FFF739] font-bold text-base"> New Purchase </span> */}
+            </MultipleChoiceDesignButton>
+
+          </>
+
         ) : isMultiple && id == "addressProvince" ? (
           <div className="w-full">
             <Input
@@ -458,7 +557,7 @@ const FluentForm = () => {
       <div className="font-sans">
 
         {/* <div className="md:m-10 m-2 rounded-lg border-2 bg-white md:p-14 p-4 py-5 max-w-[50rem]"> */}
-        <div className="md:m-10 m-2 rounded-lg p-4 py-5 max-w-[50rem]">
+        <div className="md:m-5 m-2 rounded-lg p-4 py-5 max-w-[45rem]">
 
           <AnimatePresence mode="wait">
             {currentQuestion < questionsToDisplay().length && (
