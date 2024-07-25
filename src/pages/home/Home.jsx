@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
+import SubHeader from "../../components/layout/SubHeader";
 import "./home.css"
 
 // Global styles
@@ -19,8 +20,8 @@ const GlobalStyle = createGlobalStyle`
 
 // Styled components
 const FormContainer = styled.div`
-  background: #e9eaec;
-  height: 100vh;
+  // background: #e9eaec;
+  // height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -41,17 +42,18 @@ const FormContainer = styled.div`
 `;
 
 const QuestionContainer = styled(motion.div)`  
-  // display: flex;
-  // flex-wrap: wrap;
-  // gap: 10px;
-  // margin: 10px;
-  // justify-content: center;
-  // align-items: center;
-  // align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
   // flex-direction: column; 
-  // width: 600px; 
-  margin-top: 20px;
-  max-width: 600px;
+  // margin: 10px;
+  // margin-top: 20px;
+  // width: 650px;
+  //   @media (max-width: 768px) {
+  //   width: auto;
+  // }
 `;
 
 const Input = styled.input`
@@ -90,7 +92,7 @@ const ProgressBarContainer = styled.div`
   margin-bottom: 1rem;
   display: flex; 
   align-items: center;
-
+  color: white;
   // position: absolute;
   // right: 1rem;
 `;
@@ -187,11 +189,13 @@ const ErrorMessage = styled.div`
 
 const CheckboxContainer = styled.div`
   display: flex;
-  margin-top: .2rem;
+  margin-top: .6rem;
 `;
 
 const CheckboxLabel = styled.label`
-  margin-left: 0.5rem;
+  margin-left: 1rem;
+  color: white;
+  font-size: 18px;
 `;
 
 // Question Component
@@ -235,7 +239,7 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="md:mb-4 mb-2 text-lg font-semibold"> {question} </div>
+      <div className="md:mb-4 mb-2 text-2xl fo font-bold text-white border p-2 rounded-lg questionStyle text-center"> {question} </div>
 
       <div className="flex flex-wrap gap-2 font-medium">
         {options ? (
@@ -316,10 +320,10 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
               placeholder="Enter details"
               onChange={(e) => onChange({ ...value, additionalDetails: e.target.value })}
             />
-            <div className="mt-4">Consent*</div>
+            <div className="mt-4 text-white">Consent*</div>
             <CheckboxContainer>
               <div>
-                <input
+                <input className="h-5 w-5 mt-[2px]"
                   type="checkbox"
                   checked={value.consent || false}
                   onChange={(e) => onChange({ ...value, consent: e.target.checked })}
@@ -447,18 +451,14 @@ const FluentForm = () => {
 
   const progressWidth = (Object.keys(answers).length / questionsToDisplay().length) * 100;
 
-
   return (<>
 
     <FormContainer>
 
-      <div>
-        <div className="text-center md:text-5xl text-4xl font-bold md:mt-10 m-8">Apply now</div>
+      <div className="font-sans">
 
-        <div className="md:m-10 m-2 rounded-lg border-2 bg-white md:p-14 p-4 py-5 max-w-[50rem]">
-          <h2 className="md:mb-12 mb-4 md:text-2xl text-xl font-semibold">Free Confidential Mortgage Review</h2>
-
-          <h3 className="md:mb-12 mb-4 md:text-lg text-md">Go through our quick process to get on the road to approval</h3>
+        {/* <div className="md:m-10 m-2 rounded-lg border-2 bg-white md:p-14 p-4 py-5 max-w-[50rem]"> */}
+        <div className="md:m-10 m-2 rounded-lg p-4 py-5 max-w-[50rem]">
 
           <AnimatePresence mode="wait">
             {currentQuestion < questionsToDisplay().length && (
@@ -495,15 +495,21 @@ const FluentForm = () => {
   </>);
 };
 
-const App = () => (
+const Home = () => (
   <>
     <GlobalStyle />
 
-    <FluentForm />
+    <section className="bg-black">
+      <SubHeader />
+
+      <FluentForm />
+    </section>
+
+
   </>
 );
 
-export default App;
+export default Home;
 
 
 
