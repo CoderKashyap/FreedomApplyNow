@@ -314,7 +314,7 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
         ) : (
           <div className="w-full relative inline-block">
 
-            {value && <span className="md:text-xl text-lg absolute left-[15px] top-[31px]">$</span>}
+            {value && <span className="md:text-xl text-lg absolute left-[15px] top-[31px] md:top-[30px]">$</span>}
 
             <InputDollar
               value={value}
@@ -349,11 +349,11 @@ const FluentForm = () => {
 
     { id: "traditionalLenders", type: "multipleChoice", question: "Have you applied with traditional lenders?", options: ["Yes", "No"] },
     { id: "timeframe", type: "multipleChoice", question: "What's your estimated timeframe?", options: ["Within 30 days", "Within 3 Months", "Within 8 Months", "Within 12 Months", "Unsure"] },
-    { id: "shareOtherDetail", type: "textAreaInput", question: "Please add any other details you want to share." },
     { id: "valueOfProperty", type: "input", question: "Value of Property (Approximate)" },
     { id: "totalMortgage", type: "input", question: "Total Mortgages (Approximate)" },
     { id: "purchasePrice", type: "input", question: "Purchase price" },
     { id: "downPayment", type: "input", question: "Down payment" },
+    { id: "shareOtherDetail", type: "textAreaInput", question: "Please add any other details you want to share." },
   ];
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -361,7 +361,7 @@ const FluentForm = () => {
 
   // Determine which questions to display
   const questionsToDisplay = () => {
-    const baseQuestions = questions.slice(0, 9);
+    const baseQuestions = questions.slice(0, 8);
     const conditionalQuestions = [];
 
     if (answers.financing === "Refinance") {
@@ -371,6 +371,7 @@ const FluentForm = () => {
       conditionalQuestions.push(questions.find(q => q.id === "purchasePrice"));
       conditionalQuestions.push(questions.find(q => q.id === "downPayment"));
     }
+    conditionalQuestions.push(questions.find(q => q.id === "shareOtherDetail"));
 
     return baseQuestions.concat(conditionalQuestions);
   };
@@ -447,7 +448,7 @@ const FluentForm = () => {
                 onSubmit={handleNextQuestion}
                 isMultiple={questions[currentQuestion].type === "multipleInputs"}
                 isSelectOption={questions[currentQuestion].type === "selectOptionInput"}
-                isTextArea={questions[currentQuestion].type === "textAreaInput"}
+                isTextArea={questionsToDisplay()[currentQuestion].type === "textAreaInput"}
                 options={questionsToDisplay()[currentQuestion].options}
               />
             )}
