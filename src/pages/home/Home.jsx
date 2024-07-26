@@ -120,7 +120,7 @@ const ProgressBar = styled.div`
   background: #ddd;
   border-radius: 20px;
   overflow: hidden;
-  margin-right: 10px;
+  margin-right: 15px;
 `;
 
 const Progress = styled.div`
@@ -602,8 +602,8 @@ const FluentForm = () => {
         <ProgressBar>
           <Progress width={progressWidth} />
         </ProgressBar>
-        <ArrowButton onClick={handlePreviousQuestion}> <img src={leftArrowSvg} alt="leftArrowSvg" /> </ArrowButton>
-        <ArrowButton onClick={handleNextQuestion} disabled={!answers[questionsToDisplay()[currentQuestion].id]} > <img src={rightArrowSvg} alt="rightArrowSvg" /> </ArrowButton>
+        <ArrowButton onClick={handlePreviousQuestion}> <img src={leftArrowSvg} alt="leftArrowSvg" className="w-5" /> </ArrowButton>
+        <ArrowButton onClick={handleNextQuestion} disabled={!answers[questionsToDisplay()[currentQuestion].id]} > <img src={rightArrowSvg} alt="rightArrowSvg" className="w-5" /> </ArrowButton>
       </ProgressBarContainer>
 
     </FormContainer>
