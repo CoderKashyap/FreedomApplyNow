@@ -24,7 +24,7 @@ const GlobalStyle = createGlobalStyle`
 
 // Styled components
 const FormContainer = styled.div`
-  height: calc(100vh - 5rem);
+  height: calc(100vh - 6rem);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,8 +38,8 @@ const FormContainer = styled.div`
   // padding: 3rem;
   // border-radius: 25px;
 
-  // @media (max-width: 768px) {
-  // justify-content: space-between;
+  // @media (max-width: 768px) {  
+  // justify-content: flex-start;
   // }
 `;
 
@@ -56,6 +56,11 @@ const QuestionContainer = styled(motion.div)`
   //   @media (max-width: 768px) {
   //   width: auto;
   // }
+
+  @media (max-width: 768px) {  
+  gap: 0px;
+  }
+
 `;
 
 const Input = styled.input`
@@ -69,12 +74,18 @@ const Input = styled.input`
 
 const InputDollar = styled.input`
   padding: 1rem;
-  padding-left: 1.6rem;
+  padding-left: 1.7rem;
   margin-top: 1rem;
   width: 100%;
   border-radius: 20px;
   border: 1px solid #ddd;
   box-sizing: border-box;
+  
+  @media (max-width: 768px) {  
+    gap: 0px;
+    // width: 100vw;
+  }
+
 `;
 
 const Button = styled.button`
@@ -91,12 +102,16 @@ const Button = styled.button`
 `;
 
 const ProgressBarContainer = styled.div`
-  margin-bottom: 1rem;
+  margin: 1rem;
   display: flex; 
   align-items: center;
   color: white;
   // position: absolute;
   // right: 1rem;
+
+  @media (max-width: 768px) {  
+  margin: 2rem;
+  }
 `;
 
 const ProgressBar = styled.div`
@@ -148,14 +163,12 @@ const Select = styled.select`
   box-sizing: border-box;
 `;
 
-
-
 const MultipleChoiceButton = styled.button`
   margin-top: .3rem;
   padding: 1rem 2rem;
   background: ${({ selected }) => (selected ? "linear-gradient(to right, #FC9700, #FFF739)" : "white")};
   color: #000;
-  border: 1px solid ${({ selected }) => (selected ? "#ff7e12" : "#A0A0A0")};  
+  border: 1px solid ${({ selected }) => (selected ? "#A0A0A0" : "#A0A0A0")};  
   border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -178,7 +191,7 @@ const MultipleChoiceButton = styled.button`
   }
   
   @media (max-width: 768px) {
-    padding: 0.4rem 0.8rem;
+    padding: 0.6rem 0.8rem;
   } 
 `;
 
@@ -188,10 +201,10 @@ const MultipleChoiceDesignButton = styled.button`
   justify-content: center;
   gap: 20px;
   flex-direction: column;
-  margin-top: 1.5rem;
+  // margin-top: 1rem;
   padding: 2rem;
   height: 220px;
-  min-width: 260px;
+  width: 260px;
   background-color: #F7F7F7;
   color: ${({ selected }) => (selected ? "#000" : "#000")};
   border: 3px solid ${({ selected }) => (selected ? "#2196F3" : "#F7F7F7")};  
@@ -210,7 +223,11 @@ const MultipleChoiceDesignButton = styled.button`
   }
   
   @media (max-width: 768px) {
-    padding: 0.4rem 0.8rem;
+  height: 120px;
+  width: 160px;
+  padding: 5px 5px;
+  gap: 20px;
+
   } 
 
 
@@ -231,17 +248,17 @@ const MultipleChoiceDesignButton = styled.button`
       background: linear-gradient(to right, #FC9700, #FFF739);
     }
 
+    
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
+
   }
 
 
 `;
 
-const designButtonTitle = styled.span`
-  color: red;
-  margin-top: 0.5rem;
-  margin-left: 1rem;
-  font-size: 15px;
-`;
+
 
 const ErrorMessage = styled.div`
   color: red;
@@ -262,7 +279,7 @@ const CheckboxLabel = styled.label`
 `;
 
 // Question Component
-const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple, isSelectOption, isTextArea, handlePreviousQuestion }) => {
+const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple, isSelectOption, isTextArea, handlePreviousQuestion, selection }) => {
   const handleOptionClick = (option) => {
     onChange(option);
     onSubmit();
@@ -293,7 +310,14 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
     }
   };
 
-
+  const formatNumber = (num) => {
+    if (num) {
+      // Remove existing commas
+      num = num.replace(/,/g, "");
+      const formattedNum = num.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return formattedNum;
+    }
+  };
 
   return (<>
     <QuestionContainer
@@ -303,11 +327,11 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
       transition={{ duration: 0.5 }}
     >
 
-      { options && id == "financing" ? <SubHeader /> : "" }
+      {options && id == "financing" ? <SubHeader /> : ""}
 
-      <div className="md:mb-4 mb-2 text-2xl fo font-bold text-white border p-2 rounded-lg questionStyle text-center"> {question} </div>
+      <div className="md:mb-4 mb-4 md:text-3xl text-2xl font-bold text-[#fd7e14] p-2 rounded-lg questionStyle text-center"> {question} </div>
 
-      <div className={`flex flex-wrap ${ options && id == "financing" ? "gap-10" : "gap-7" }  font-medium`}>
+      <div className={`flex ${options && id == "financing" ? "md:gap-10 gap-4 my-10 md:my-0" : "w-full gap-6 flex-wrap px-5 md:px-0 md:mb-8 my-0"}  font-medium`}>
         {options && id !== "financing" ? (
           options.map((option) => (
             <MultipleChoiceButton
@@ -319,37 +343,23 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
             </MultipleChoiceButton>
           ))
         ) : options && id == "financing" ? (
-          // options.map((option) => (
-          //   <MultipleChoiceDesignButton
-          //     key={option}
-          //     selected={value === option}
-          //     onClick={() => handleOptionClick(option)}
-          //   >
-          //     <div className="rounded-full bg-white py-6 px-7"> <img src={NewPurchase} alt="newPurchase icon" /> </div>
-
-          //     {option}
-          //   </MultipleChoiceDesignButton>
-          // ))
-
           <>
 
             <MultipleChoiceDesignButton
               selected={value === "Refinance"}
               onClick={() => handleOptionClick("Refinance")}
             >
-              <div className="rounded-full bg-white py-6 px-7"> <img src={Refinance} alt="icon" /> </div>
+              <div className="rounded-full bg-white md:py-6 py-4 md:px-7 px-5"> <img src={Refinance} height={61} width={61} className="md:auto w-16" alt="icon" /> </div>
 
               <span className=""> Refinance</span>
-              {/* <span className="hover:bg-white rounded-full py-3 px-6 hover:bg-gradient-to-r from-[#FC9700] to-[#FFF739] font-bold text-base"> Refinance</span> */}
             </MultipleChoiceDesignButton>
             <MultipleChoiceDesignButton
               selected={value === "New Purchase"}
               onClick={() => handleOptionClick("New Purchase")}
             >
-              <div className="rounded-full bg-white py-6 px-7"> <img src={NewPurchase} alt="icon" /> </div>
+              <div className="rounded-full bg-white md:py-6 py-4 md:px-7 px-5"> <img src={NewPurchase} height={61} width={61} className="md:auto w-14" alt="icon" /> </div>
 
               <span className=""> New Purchase </span>
-              {/* <span className="hover:bg-white rounded-full py-3 px-6 hover:bg-gradient-to-r from-[#FC9700] to-[#FFF739] font-bold text-base"> New Purchase </span> */}
             </MultipleChoiceDesignButton>
 
           </>
@@ -381,40 +391,44 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
               onChange={(e) => onChange(e.target.value)}
             >
               <option value="">How did you hear about us?</option>
-              <option value="Google Search">Google Search</option>
-              <option value="Social Media">Social Media</option>
-              <option value="TV">TV</option>
+              {selection && selection.map((sel) => (
+                <option value={sel}>{sel}</option>
+              ) )}
+              {/* <option value="Social Media">Social Media</option>
+              <option value="TV">TV</option> */}
             </Select>
             {value && (
               <Button onClick={onSubmit}>OK</Button>
             )}
           </div>
-        ) : isMultiple && id == "nameEmailPhone" ? (<div>
-          <Input
-            type="text"
-            value={value.name || ""}
-            placeholder="Enter your name"
-            onChange={(e) => onChange({ ...value, name: e.target.value })} />
+        ) : isMultiple && id == "nameEmailPhone" ? (
+          <div className="w-full">
+            <Input
+              type="text"
+              value={value.name || ""}
+              placeholder="Enter your name"
+              onChange={(e) => onChange({ ...value, name: e.target.value })} />
 
-          <Input
-            type="email"
-            value={value.email || ""}
-            placeholder="Enter your email"
-            onChange={(e) => { onChange({ ...value, email: e.target.value }); validateEmailPhone("email", e.target.value) }}
-          />
-          {errors.email && value.email && <ErrorMessage>{errors.email}</ErrorMessage>}
-          <Input
-            type="phone"
-            value={value.phone || ""}
-            placeholder="Enter your phone number"
-            maxLength={10}
-            onChange={(e) => { onChange({ ...value, phone: e.target.value.replace(/[^0-9]/g, "") }); validateEmailPhone("phone", e.target.value) }}
-          />
-          {errors.phone && value.phone && <ErrorMessage>{errors.phone}</ErrorMessage>}
-          {value.name && value.email && value.phone && (
-            <Button onClick={onSubmit}>OK</Button>
-          )}
-        </div>) : isTextArea && id == "shareOtherDetail" ? (
+            <Input
+              type="email"
+              value={value.email || ""}
+              placeholder="Enter your email"
+              onChange={(e) => { onChange({ ...value, email: e.target.value }); validateEmailPhone("email", e.target.value) }}
+            />
+            {errors.email && value.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+            <Input
+              type="phone"
+              value={value.phone || ""}
+              placeholder="Enter your phone number"
+              maxLength={10}
+              onChange={(e) => { onChange({ ...value, phone: e.target.value.replace(/[^0-9]/g, "") }); validateEmailPhone("phone", e.target.value) }}
+            />
+            {errors.phone && value.phone && <ErrorMessage>{errors.phone}</ErrorMessage>}
+            {value.name && value.email && value.phone && (
+              <Button onClick={onSubmit}>OK</Button>
+            )}
+          </div>
+        ) : isTextArea && id == "shareOtherDetail" ? (
 
           <div className="w-full">
             <Textarea
@@ -441,14 +455,13 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
 
 
         ) : (
-          <div className="w-full relative inline-block">
-
-            {value && <span className="md:text-xl text-lg absolute left-[15px] top-[31px] md:top-[30px]">$</span>}
+          <div className="w-full relative">
+            {value && <span className="md:text-xl text-black text-lg absolute left-[15px] top-[30px] md:top-[29px]">$</span>}
 
             <InputDollar
               value={value}
               placeholder={`Enter ${question}`}
-              onChange={(e) => onChange(e.target.value.replace(/[^0-9]/g, ""))}
+              onChange={(e) => onChange(formatNumber(e.target.value.replace(/[^0-9]/g, "")))}
             />
             {value && (
               <Button onClick={onSubmit}>OK</Button>
@@ -560,7 +573,7 @@ const FluentForm = () => {
       <div className="font-sans">
 
         {/* <div className="md:m-10 m-2 rounded-lg border-2 bg-white md:p-14 p-4 py-5 max-w-[50rem]"> */}
-        <div className="md:m-1 m-2 rounded-lg p-4 py-5 max-w-[45rem]">
+        <div className="md:m-1 m-2 rounded-lg p-2 max-w-[45rem]">
 
           <AnimatePresence mode="wait">
             {currentQuestion < questionsToDisplay().length && (
@@ -576,6 +589,7 @@ const FluentForm = () => {
                 isSelectOption={questions[currentQuestion].type === "selectOptionInput"}
                 isTextArea={questionsToDisplay()[currentQuestion].type === "textAreaInput"}
                 options={questionsToDisplay()[currentQuestion].options}
+                selection={questionsToDisplay()[currentQuestion].selection}
               />
             )}
           </AnimatePresence>
@@ -588,7 +602,6 @@ const FluentForm = () => {
         <ProgressBar>
           <Progress width={progressWidth} />
         </ProgressBar>
-        {/* <ArrowButton onClick={handlePreviousQuestion}> <i className='bx bx-chevron-left'></i> </ArrowButton> */}
         <ArrowButton onClick={handlePreviousQuestion}> <img src={leftArrowSvg} alt="leftArrowSvg" /> </ArrowButton>
         <ArrowButton onClick={handleNextQuestion} disabled={!answers[questionsToDisplay()[currentQuestion].id]} > <img src={rightArrowSvg} alt="rightArrowSvg" /> </ArrowButton>
       </ProgressBarContainer>
@@ -603,9 +616,6 @@ const Home = () => (
     <GlobalStyle />
 
     <section className="bg-black">
-
-      {/* <SubHeader /> */}
-
       <FluentForm />
     </section>
 
