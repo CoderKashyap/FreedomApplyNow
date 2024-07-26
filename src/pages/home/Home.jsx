@@ -432,7 +432,7 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
               onChange={(e) => { onChange({ ...value, phone: e.target.value.replace(/[^0-9]/g, "") }); validateEmailPhone("phone", e.target.value) }}
             />
             {errors.phone && value.phone && <ErrorMessage>{errors.phone}</ErrorMessage>}
-            {value.name && value.email && value.phone && (
+            {value.name && value.email && value.phone && !errors.phone && !errors.email (
               <Button onClick={onSubmit}>Next</Button>
             )}
           </div>
@@ -468,7 +468,7 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
         ) : (
           <div className="w-full relative flex flex-col justify-center items-center">
 
-            {value && <span className="md:text-[16px] text-[17px] text-black text-lg absolute left-[15px] top-[30px] md:top-[29.6px]">$</span>}
+            {value && <span className="md:text-[16px] text-[17px] text-black text-lg absolute left-[15px] top-[30px] md:top-[29.8px]">$</span>}
 
             <InputDollar
               value={value}
@@ -567,7 +567,6 @@ const FluentForm = () => {
         [currentQuestionId]: value,
       };
     });
-
 
   };
 
