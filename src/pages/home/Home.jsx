@@ -7,6 +7,7 @@ import NewPurchase from "/newPurchase.svg";
 import Refinance from "/refinance.svg";
 import rightArrowSvg from "/polygonRight.svg";
 import leftArrowSvg from "/polygonLeft.svg";
+import { Link } from "react-router-dom";
 
 // Global styles
 const GlobalStyle = createGlobalStyle`
@@ -74,7 +75,7 @@ const Input = styled.input`
 
 const InputDollar = styled.input`
   padding: 1rem;
-  padding-left: 1.7rem;
+  padding-left: 1.6rem;
   margin-top: 1rem;
   width: 100%;
   border-radius: 20px;
@@ -173,6 +174,7 @@ const MultipleChoiceButton = styled.button`
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 
+
     &:hover {
       background: linear-gradient(to right, #FC9700, #FFF739);
     }
@@ -227,10 +229,9 @@ const MultipleChoiceDesignButton = styled.button`
   width: 160px;
   padding: 5px 5px;
   gap: 20px;
-
   } 
 
-
+  
 
   span {
     font-size: 1rem;
@@ -250,10 +251,9 @@ const MultipleChoiceDesignButton = styled.button`
 
     
   @media (max-width: 768px) {
-    font-size: 0.9rem;
-  }
-
-  }
+    font-size: 14px;
+    padding: 0.5rem 1rem;
+    }
 
 
 `;
@@ -331,7 +331,7 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
 
       <div className="md:mb-4 mb-4 md:text-3xl text-2xl font-bold text-[#fd7e14] p-2 rounded-lg questionStyle text-center"> {question} </div>
 
-      <div className={`flex ${options && id == "financing" ? "md:gap-10 gap-4 my-10 md:my-0" : "w-full gap-6 flex-wrap px-5 md:px-0 md:mb-8 my-0"}  font-medium`}>
+      <div className={`flex ${options && id == "financing" ? "md:gap-10 gap-4 my-10 md:my-0" : "w-full gap-6 flex-wrap px-5 md:px-0 md:mb-8 my-0 justify-center items-center"}  font-medium`}>
         {options && id !== "financing" ? (
           options.map((option) => (
             <MultipleChoiceButton
@@ -344,14 +344,13 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
           ))
         ) : options && id == "financing" ? (
           <>
-
             <MultipleChoiceDesignButton
               selected={value === "Refinance"}
               onClick={() => handleOptionClick("Refinance")}
             >
               <div className="rounded-full bg-white md:py-6 py-4 md:px-7 px-5"> <img src={Refinance} height={61} width={61} className="md:auto w-16" alt="icon" /> </div>
 
-              <span className=""> Refinance</span>
+              <span className="">Refinance</span>
             </MultipleChoiceDesignButton>
             <MultipleChoiceDesignButton
               selected={value === "New Purchase"}
@@ -359,16 +358,15 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
             >
               <div className="rounded-full bg-white md:py-6 py-4 md:px-7 px-5"> <img src={NewPurchase} height={61} width={61} className="md:auto w-14" alt="icon" /> </div>
 
-              <span className=""> New Purchase </span>
+              <span className="">New Purchase</span>
             </MultipleChoiceDesignButton>
 
           </>
-
         ) : isMultiple && id == "addressProvince" ? (
-          <div className="w-full">
+          <div className="w-full relative flex flex-col justify-center items-center">
             <Input
               value={value.address || ""}
-              placeholder="Enter your address(Autofetch)"
+              placeholder="Enter your address(Autofetch soon)"
               onChange={(e) => onChange({ ...value, address: e.target.value })}
             />
             <Select
@@ -376,29 +374,39 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
               onChange={(e) => onChange({ ...value, province: e.target.value })}
             >
               <option value="">Select your province</option>
-              <option value="province1">Province 1</option>
-              <option value="province2">Province 2</option>
-              <option value="province3">Province 3</option>
+              <option value="province1">Alberta</option>
+              <option value="province2">Britist Columbia</option>
+              <option value="province3">Manitoba</option>
+              <option value="province3">New Brunswick</option>
+              <option value="province3">Newfoundland & Labrador</option>
+              <option value="province3">Northwest Territories</option>
+              <option value="province3">Nova Scotia</option>
+              <option value="province3">Nunavut</option>
+              <option value="province3">Ontario</option>
+              <option value="province3">Prince Edward Island</option>
+              <option value="province3">Quebec</option>
+              <option value="province3">Saskatchewan</option>
+              <option value="province3">Yukon</option>
             </Select>
             {value.address && value.province && (
-              <Button onClick={onSubmit}>OK</Button>
+              <Button onClick={onSubmit}>Next</Button>
             )}
           </div>
         ) : isSelectOption && id == "hearAboutUs" ? (
-          <div className="w-full">
+          <div className="w-full flex flex-col justify-center items-center">
             <Select
               value={value}
               onChange={(e) => onChange(e.target.value)}
             >
               <option value="">Select</option>
-              {selection && selection.map((sel) => (
-                <option value={sel}>{sel}</option>
-              ) )}
+              {selection && selection.map((sel, i) => (
+                <option key={i} value={sel}>{sel}</option>
+              ))}
               {/* <option value="Social Media">Social Media</option>
               <option value="TV">TV</option> */}
             </Select>
             {value && (
-              <Button onClick={onSubmit}>OK</Button>
+              <Button onClick={onSubmit}>Next</Button>
             )}
           </div>
         ) : isMultiple && id == "nameEmailPhone" ? (
@@ -425,7 +433,7 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
             />
             {errors.phone && value.phone && <ErrorMessage>{errors.phone}</ErrorMessage>}
             {value.name && value.email && value.phone && (
-              <Button onClick={onSubmit}>OK</Button>
+              <Button onClick={onSubmit}>Next</Button>
             )}
           </div>
         ) : isTextArea && id == "shareOtherDetail" ? (
@@ -445,18 +453,22 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
                   onChange={(e) => onChange({ ...value, consent: e.target.checked })}
                 />
               </div>
-              <CheckboxLabel>I agree to the storage and processing of my personal data according to this website's privacy policy.</CheckboxLabel>
+              <CheckboxLabel>I agree to the storage and processing of my personal data according to this website's <Link to="https://www.freedomcapital.com/privacy-policy/" className="text-[#ff0042]">privacy policy.</Link> </CheckboxLabel>
             </CheckboxContainer>
             {value.additionalDetails && value.consent && (<>
+            <div className="flex justify-around items-center mt-2">
               <Button onClick={handlePreviousQuestion}>Previous</Button> <span className="mr-5"></span>
-              <Button onClick={onSubmit}>Submit</Button></>
+              <Button onClick={onSubmit}>Submit</Button>
+            </div>
+              </>
             )}
           </div>
 
 
         ) : (
-          <div className="w-full relative">
-            {value && <span className="md:text-xl text-black text-lg absolute left-[15px] top-[30px] md:top-[29px]">$</span>}
+          <div className="w-full relative flex flex-col justify-center items-center">
+
+            {value && <span className="md:text-[16px] text-[17px] text-black text-lg absolute left-[15px] top-[30px] md:top-[29.6px]">$</span>}
 
             <InputDollar
               value={value}
@@ -464,7 +476,7 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
               onChange={(e) => onChange(formatNumber(e.target.value.replace(/[^0-9]/g, "")))}
             />
             {value && (
-              <Button onClick={onSubmit}>OK</Button>
+              <Button onClick={onSubmit}>Next</Button>
             )}
           </div>
         )}
