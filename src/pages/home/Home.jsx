@@ -191,7 +191,7 @@ const MultipleChoiceButton = styled.button`
   }
   
   @media (max-width: 768px) {
-    padding: 0.6rem 0.8rem;
+    padding: 0.7rem 1rem;
   } 
 `;
 
@@ -390,7 +390,7 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
               value={value}
               onChange={(e) => onChange(e.target.value)}
             >
-              <option value="">How did you hear about us?</option>
+              <option value="">Select</option>
               {selection && selection.map((sel) => (
                 <option value={sel}>{sel}</option>
               ) )}
@@ -448,7 +448,7 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
               <CheckboxLabel>I agree to the storage and processing of my personal data according to this website's privacy policy.</CheckboxLabel>
             </CheckboxContainer>
             {value.additionalDetails && value.consent && (<>
-              <Button onClick={handlePreviousQuestion}>Previous</Button> <span className="mr-8"></span>
+              <Button onClick={handlePreviousQuestion}>Previous</Button> <span className="mr-5"></span>
               <Button onClick={onSubmit}>Submit</Button></>
             )}
           </div>
