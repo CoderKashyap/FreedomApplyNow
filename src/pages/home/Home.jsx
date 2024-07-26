@@ -410,7 +410,7 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
             )}
           </div>
         ) : isMultiple && id == "nameEmailPhone" ? (
-          <div className="w-full">
+          <div className="w-full flex justify-center items-center flex-col">
             <Input
               type="text"
               value={value.name || ""}
@@ -432,7 +432,7 @@ const Question = ({ id, question, value, onChange, onSubmit, options, isMultiple
               onChange={(e) => { onChange({ ...value, phone: e.target.value.replace(/[^0-9]/g, "") }); validateEmailPhone("phone", e.target.value) }}
             />
             {errors.phone && value.phone && <ErrorMessage>{errors.phone}</ErrorMessage>}
-            {value.name && value.email && value.phone && !errors.phone && !errors.email (
+            {value.name && value.email && value.phone && errors &&!errors.phone && !errors.email && (
               <Button onClick={onSubmit}>Next</Button>
             )}
           </div>
